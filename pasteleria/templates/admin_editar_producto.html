@@ -1,0 +1,12 @@
+{% extends "diseno.html" %}
+{% block body %}
+    <h1>Editar producto</h1>
+    <form method="post" action="{% url 'admin_editar_producto' producto_id=productoObject.id %}">
+        {% csrf_token %}
+        {{ form.producto.label_tag }} {{ form.producto }}
+        {{ form.precio.label_tag }} {{ form.precio }}
+        {{ form.stock.label_tag }}  {{ form.stock }}
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="{% url 'admin_lista_productos' %}">Volver al listado</a>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "diseno.html" %}
+
+{% block body %}
+    <h1>Productos</h1>
+    {% if productos.count == 0 %}
+        <p>No hay productos</p>
+    {% else %}
+        {% for producto in productos %}
+            <ul>
+                <li>
+                    <span id="stock_{{ producto.id }}">{{ producto.stock }}</span>: {{ producto.nombre  }} - ${{ producto.precio }}
+                    <button onclick="agregarCarrito({{ producto.id }})">Agregar al carrito</button>
+                </li>
+            </ul>
+        {% endfor %}
+    {% endif %}
+    <div>
+        <a href="{% url 'ver_carrito' %}">Ver carrito</a>
+    </div>
+    <a href="{% url 'login' %}">Logout</a>
+{% endblock %}
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+    function agregarCarrito(id){
+        fetch('/productos/agregar-carrito/'+id)
+        .then(response => {
+            if (!response.ok) {
+                // If the server returns an error, print out the response text
+                response.text().then(text => console.log(text));
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data)
+            updateStock(id);
+        })
+    }
+
+    function updateStock(productId) {
+        $.ajax({
+            url: '/productos/update_stock/' + productId + '/',
+            type: 'GET',
+            success: function(response) {
+                // Update the stock display
+                document.querySelector('#stock_' + productId).innerHTML = response.new_stock;
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
+    </script>   
+{% endblock %}
+```

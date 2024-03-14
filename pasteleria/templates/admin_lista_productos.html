@@ -1,0 +1,48 @@
+{% extends "diseno.html" %}
+
+{% block body %}
+    <h1>Productos:</h1>
+    <ul>
+        {% for producto in productos %}
+            <li>
+                {{ producto.stock }}: {{ producto.nombre  }} - ${{ producto.precio }}
+                <button onclick="location.href='{% url 'admin_editar_producto' producto.id %}'">Editar</button>
+                <button onclick="eliminarProducto({{ producto.id }})">Eliminar</button>
+            </li>
+        {% endfor %}
+    </ul>
+    <div>
+        <a href="{% url 'admin_agregar_producto' %}">Agregar producto</a>
+    </div>
+    <a href="{% url 'login' %}">Logout</a>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    function eliminarProducto(productoId) {
+        if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
+            fetch(`/administrador/productos/eliminar/${productoId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Recargar la página o actualizar la lista de productos
+                    window.location.reload();
+                } else {
+                    // Manejar cualquier error en la respuesta
+                    console.error('Error al eliminar el producto');
+                }
+            })
+            .catch(error => {
+                console.error('Error de red:', error);
+            });
+        }
+    }
+</script>
+{% endblock %}
+
+
+

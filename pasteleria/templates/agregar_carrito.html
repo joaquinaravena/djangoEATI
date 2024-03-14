@@ -1,0 +1,10 @@
+{% load carton_tags %}
+
+<h2>Carrito de compras</h2>
+<ul>
+{% for item in cart %}
+    <li>{{ item.product }} - {{ item.unit_price }} - {{ item.quantity }}</li>
+{% endfor %}
+</ul>
+
+<p>Total: {{ cart.total }}</p>

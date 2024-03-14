@@ -1,0 +1,27 @@
+{% extends "diseno.html" %}
+
+{% block body %}
+        <h1>Tu carrito</h1>
+    {% for item in carrito.items %}
+        <div>
+            <h2>Producto: {{ item.product }}</h2>
+            <p>Cantidad: {{ item.quantity }}</p>
+            <p>Precio: {{ item.price }}</p>
+            <form method="post" action="{% url 'eliminar_producto_carrito' item.product.id %}">
+                {% csrf_token %}
+                <button type="submit">Eliminar</button>
+            </form>       
+        </div>
+    {% empty %}
+        <p>No hay productos en tu carrito.</p>
+    {% endfor %}
+    <h2>Total: {{ carrito.total }}</h2>
+    <form method="post" action="{% url 'procesar_pago' carrito.total %}">
+        {% csrf_token %}
+        <button type="submit">Pagar</button>
+    </form>
+
+    <a href="{% url 'lista_productos' %}">Seguir comprando</a>
+
+{% endblock %}
+```
